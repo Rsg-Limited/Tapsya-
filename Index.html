@@ -1,94 +1,123 @@
-<!-- index.html -->
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🕉️ TAPSYA - The AI Rishi</title>
+  <title>TAPSYA</title>
   <style>
-    body {
+    * {
       margin: 0;
       padding: 0;
-      background: url("images/tapsya-final.png") no-repeat center center fixed;
-      background-size: cover;
-      font-family: 'Georgia', serif;
-      color: white;
-      text-shadow: 1px 1px 3px black;
-    }
+      box-sizing: border-box;
+    }body, html {
+  height: 100%;
+  font-family: 'Georgia', serif;
+  overflow: hidden;
+}
 
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.5);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
 
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
+.background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-    .input-box {
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 1rem;
-      border-radius: 10px;
-      border: 1px solid white;
-      width: 90%;
-      max-width: 600px;
-    }
+.content {
+  position: relative;
+  z-index: 1;
+  color: white;
+  padding: 2rem;
+  text-shadow: 1px 1px 3px black;
+  max-width: 600px;
+  margin: 5vh auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+}
 
-    input {
-      width: 100%;
-      padding: 1rem;
-      font-size: 1.2rem;
-      border: none;
-      border-radius: 5px;
-      outline: none;
-      background: #fdf6e3;
-      color: #000;
-    }
+h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
 
-    .response {
-      margin-top: 1rem;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 1rem;
-      border-radius: 10px;
-      font-size: 1.1rem;
-      max-width: 600px;
-    }
+p {
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.ask-box {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+input, button {
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+}
+
+input {
+  width: 100%;
+}
+
+button {
+  background-color: #e0b14f;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.response {
+  margin-top: 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  font-style: italic;
+}
+
   </style>
 </head>
-<body>
-  <div class="overlay">
-    <h1>🧘‍♂️ Tapasya AI</h1>
-    <div class="input-box">
-      <input id="userInput" placeholder="Apna prashn puchhiye..." onkeypress="if(event.key==='Enter'){askRishi()}">
-    </div>
-    <div class="response" id="rishiResponse">🙏 Rishi aapke sawal ka uttar denge...</div>
-  </div>
+<body>  <div class="background">
+    <img src="images/tapsya-final.png" alt="Background image" />
+  </div>  <div class="content">
+    <h1>Welcome to TAPSYA</h1>
+    <p>Ask your question to the Rishi...</p><div class="ask-box">
+  <input type="text" id="questionInput" placeholder="Type your question here...">
+  <button onclick="askTapsya()">Ask the Rishi</button>
+  <div class="response" id="responseBox"></div>
+</div>
 
-  <script>
-    async function askRishi() {
-      const input = document.getElementById('userInput').value;
-      if (!input) return;
-      document.getElementById('rishiResponse').innerText = "🧘‍♂️ Soch rahe hain...";
-      
-      const response = await fetch("https://api-inference.huggingface.co/models/google/flan-t5-small", {
-        method: "POST",
-        headers: {
-          "Authorization": "Bearer YOUR_HUGGINGFACE_API_KEY",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ inputs: input })
-      });
+  </div>  <script>
+    function askTapsya() {
+      const input = document.getElementById('questionInput');
+      const responseBox = document.getElementById('responseBox');
 
-      const data = await response.json();
-      const answer = data?.[0]?.generated_text || "🧘‍♂️ Kuch galti ho gayi, dobara prashn puchhiye.";
-      document.getElementById('rishiResponse').innerText = answer;
+      const question = input.value.trim();
+      if (!question) {
+        responseBox.innerText = 'Please enter a question first.';
+        return;
+      }
+
+      const responses = [
+        'जवाब भीतर की तपस्या में छिपा है।',
+        'तुम्हारा मार्ग प्रकाशमान होगा, धैर्य रखो।',
+        'जो तुम खोजते हो, वह भी तुम्हें खोज रहा है।',
+        'तुम्हारी आत्मा जानती है उत्तर, मन को शांत करो।',
+        'संकेत मिलेंगे, ध्यान से देखो।'
+      ];
+
+      const randomIndex = Math.floor(Math.random() * responses.length);
+      responseBox.innerText = responses[randomIndex];
     }
-  </script>
-</body>
+  </script></body>
 </html>
